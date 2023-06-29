@@ -129,6 +129,7 @@ if __name__ == "__main__":
             shots=config.n_support + config.n_query,
             test_shots=config.n_support + config.n_query,
             meta_train=True,
+            meta_split="train",
             download=False,
         )
     else:
