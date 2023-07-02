@@ -130,7 +130,7 @@ if __name__ == "__main__":
             test_shots=config.n_support + config.n_query,
             meta_train=True,
             meta_split="train",
-            download=False,
+            download=True,
         )
     else:
         raise ValueError(f"Dataset {config.dataset} not recognised.")
