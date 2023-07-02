@@ -1,6 +1,7 @@
 name: POEM
 channels:
   - conda-forge
+  - pytorch
 dependencies:
   - python=3.9
   - black==22.3.0
