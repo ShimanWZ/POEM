@@ -6,8 +6,8 @@ dependencies:
   - black==22.3.0
   - numpy==1.22.2
   - matplotlib==3.5.1
-  - pytorch==1.9.1
-# - pytorch-cuda==11.3 # Replace pytorch==1.9.1 with cuda version for gpu use.
+#  - pytorch==1.9.1
+  - pytorch-cuda==11.3 # Replace pytorch==1.9.1 with cuda version for gpu use.
   - torchvision==0.10.0 # Pinned due to torchmeta (see below)
   - gym==0.21.0
   - pip
