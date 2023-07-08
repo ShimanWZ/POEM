@@ -30,7 +30,6 @@ class CompleteObservationLearner(nn.Module):
         self.query_encoder = ProtoEncoder(
             input_shape, hid_dim, z_dim, use_location, use_direction, use_coordinates
         )
-        self.projection_network = ProjectionNetwork(z_dim, z_dim, z_dim)
 
     def euclidian_distances(self, prototypes, embeddings):
         distances = torch.sum(
@@ -44,7 +43,7 @@ class CompleteObservationLearner(nn.Module):
         num_queries = query_views["targets"].shape[0]
 
         environment_embeddings, _ = self.environment_encoder.forward(
-            support_trajectories["environments"], None, None, None
+            support_trajectories["observations"], None, None, None
         )
         query_embeddings, _ = self.query_encoder.forward(
             query_views["observations"],
@@ -63,12 +62,8 @@ class CompleteObservationLearner(nn.Module):
 
         query_embeddings = query_embeddings.unsqueeze(0)
 
-        environment_targets = support_trajectories["environment_targets"].unsqueeze(0)
+        environment_targets = support_trajectories["targets"].unsqueeze(0)
         query_targets = query_views["targets"].unsqueeze(0)
-
-        environment_projections = self.projection_network.forward(
-            environment_embeddings
-        )
 
         euclidian_distances = self.euclidian_distances(
             environment_projections, query_embeddings
