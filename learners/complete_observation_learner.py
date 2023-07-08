@@ -47,9 +47,6 @@ class CompleteObservationLearner(nn.Module):
         )
         query_embeddings, _ = self.query_encoder.forward(
             query_views["observations"],
-            query_views["locations"] if self.use_locations else None,
-            query_views["directions"] if self.use_directions else None,
-            query_views["coordinates"] if self.use_coordinates else None,
         )
 
         environment_embeddings = (
