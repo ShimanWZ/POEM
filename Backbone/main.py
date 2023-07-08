@@ -8,7 +8,7 @@ import wandb
 from torchmeta.datasets.helpers import omniglot, miniimagenet
 from torchmeta.utils.data import BatchMetaDataLoader
 
-from learners.poem import PartialObservationExpertsModelling
+from learners.poem import CompleteObservationLearner
 from learners.protonet import PrototypicalNetwork
 from FSL.train import train
 
@@ -138,8 +138,8 @@ if __name__ == "__main__":
     dataloader = iter(BatchMetaDataLoader(dataset, batch_size=1, num_workers=4))
 
     if config.learner == "POEM":
-        learner = Encoder(
-            x_dim=config.output_shape,
+        learner = CompleteObservationLearner(
+            input_shape=config.output_shape,
             hid_dim=config.hidden_dim,
             z_dim=config.embedding_dim,
         ).to(device)
