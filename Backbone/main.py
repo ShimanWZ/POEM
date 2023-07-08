@@ -8,7 +8,7 @@ import wandb
 from torchmeta.datasets.helpers import omniglot, miniimagenet
 from torchmeta.utils.data import BatchMetaDataLoader
 
-from learners.poem import CompleteObservationLearner
+from learners.complete_observation_learner import CompleteObservationLearner
 from learners.protonet import PrototypicalNetwork
 from FSL.train import train
 
