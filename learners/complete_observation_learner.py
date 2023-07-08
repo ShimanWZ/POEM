@@ -43,9 +43,6 @@ class CompleteObservationLearner(nn.Module):
         num_environments = support_trajectories["targets"].unique().shape[0]
         num_queries = query_views["targets"].shape[0]
 
-        if self.orient_queries:
-            query_views = orientate_observations(query_views)
-
         environment_embeddings, _ = self.environment_encoder.forward(
             support_trajectories["environments"], None, None, None
         )
