@@ -46,7 +46,7 @@ class CompleteObservationLearner(nn.Module):
             support_trajectories["observations"], None, None, None
         )
         query_embeddings, _ = self.query_encoder.forward(
-            query_views["observations"],
+            query_views["observations"], None, None, None
         )
 
         environment_embeddings = (
