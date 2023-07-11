@@ -29,6 +29,7 @@ def train(
     output_shape,
     use_coordinates,
     test_type="",
+    apply_blur=False,
 ):
     for epoch in range(max_epochs):
         for episode in range(epoch_size):
@@ -77,7 +78,6 @@ def train(
                     coordinates_list.append(coordinates)
                 augmented_inputs = T.cat(cropped_inputs_list, dim=1)
                 coordinates = T.cat(coordinates_list, dim=1)
-
             elif apply_masking:
                 masked_inputs_list = []
                 coordinates_list = []
@@ -95,6 +95,24 @@ def train(
                     masked_inputs_list.append(masked_inputs)
                     coordinates_list.append(coordinates)
                 augmented_inputs = T.cat(masked_inputs_list, dim=1)
+                coordinates = T.cat(coordinates_list, dim=1)
+            elif apply_blur:
+                blurred_inputs_list = []
+                coordinates_list = []
+                for i in range(num_crops):
+                    blurred_inputs, coordinates = blur_input(
+                        inputs, patch_size, invert, no_noise
+                    )
+                    image_source = (
+                        T.tensor(list(range(coordinates.shape[1])))
+                        .unsqueeze(0)
+                        .unsqueeze(2)
+                        .repeat(coordinates.shape[0], 1, 1)
+                    )
+                    coordinates = T.cat([coordinates, image_source], dim=2)
+                    blurred_inputs_list.append(blurred_inputs)
+                    coordinates_list.append(coordinates)
+                augmented_inputs = T.cat(blurred_inputs_list, dim=1)
                 coordinates = T.cat(coordinates_list, dim=1)
 
             rescaled_inputs = rescale_input(augmented_inputs, output_shape)

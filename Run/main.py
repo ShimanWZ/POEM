@@ -215,7 +215,8 @@ if __name__ == "__main__":
         no_noise=config.no_noise,
         output_shape=config.output_shape,
         use_coordinates=config.use_coordinates,
-        test_type="Crop "
+        test_type="Crop ",
+        apply_blur=False
     )
 
     checkpoint_path = os.path.join(wandb.run.dir, "checkpoint.pt")
@@ -252,43 +253,45 @@ if __name__ == "__main__":
         no_noise=config.no_noise,
         output_shape=config.output_shape,
         use_coordinates=config.use_coordinates,
-        test_type="Mask "
+        test_type="Mask ",
+        apply_blur=False
     )
-    #
-    # checkpoint_path = os.path.join(wandb.run.dir, "checkpoint.pt")
-    # print(f"Saving checkpoint to {checkpoint_path}...")
-    # T.save(
-    #     {
-    #         "epoch": config.num_epochs,
-    #         "learner_state_dict": learner.state_dict(),
-    #         "optimizer_state_dict": optimizer.state_dict(),
-    #         "loss": outputs["loss"],
-    #         "accuracy": outputs["accuracy"],
-    #     },
-    #     checkpoint_path,
-    # )
-    # wandb.save(checkpoint_path, base_path=checkpoint_path)
-    #
-    # outputs = train(
-    #     train="test",
-    #     max_epochs=1,
-    #     epoch_size=config.test_episodes,
-    #     dataloader=dataloader,
-    #     device=device,
-    #     learner=learner,
-    #     optimizer=optimizer,
-    #     n_way=config.n_way,
-    #     n_support=config.n_support,
-    #     n_query=config.n_query,
-    #     group_classes=config.group_classes,
-    #     apply_cropping=config.cropping,
-    #     apply_masking=config.masking,
-    #     num_crops=config.num_crops,
-    #     patch_size=config.patch_size,
-    #     invert=config.invert,
-    #     no_noise=config.no_noise,
-    #     output_shape=config.output_shape,
-    #     use_coordinates=config.use_coordinates,
-    #     test_type="Blur "
-    # )
+
+    checkpoint_path = os.path.join(wandb.run.dir, "checkpoint.pt")
+    print(f"Saving checkpoint to {checkpoint_path}...")
+    T.save(
+        {
+            "epoch": config.num_epochs,
+            "learner_state_dict": learner.state_dict(),
+            "optimizer_state_dict": optimizer.state_dict(),
+            "loss": outputs["loss"],
+            "accuracy": outputs["accuracy"],
+        },
+        checkpoint_path,
+    )
+    wandb.save(checkpoint_path, base_path=checkpoint_path)
+
+    outputs = train(
+        train="test",
+        max_epochs=1,
+        epoch_size=config.test_episodes,
+        dataloader=dataloader,
+        device=device,
+        learner=learner,
+        optimizer=optimizer,
+        n_way=config.n_way,
+        n_support=config.n_support,
+        n_query=config.n_query,
+        group_classes=config.group_classes,
+        apply_cropping=False,
+        apply_masking=False,
+        num_crops=config.num_crops,
+        patch_size=config.patch_size,
+        invert=config.invert,
+        no_noise=config.no_noise,
+        output_shape=config.output_shape,
+        use_coordinates=config.use_coordinates,
+        test_type="Blur ",
+        apply_blur=True
+    )
     wandb.finish()
