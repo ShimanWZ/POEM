@@ -3,7 +3,7 @@ import torch as T
 import torchvision
 import wandb
 
-from FSL.utils import crop_input, mask_input, rescale_input
+from FSL.utils import crop_input, mask_input, rescale_input, blur_input
 from torchvision.utils import save_image
 import time
 
