@@ -47,7 +47,7 @@ def blur_input(input, patch_size=-1, invert=False, no_noise=False):
         .permute(2, 3, 0, 1)
         .reshape(input.shape[0], input.shape[1], -1)
     )
-    return cropped_input, coordinates
+    return blurred_input, coordinates
 
 def rescale_input(input, output_shape):
     rescaled_input = input.reshape(-1,*input.shape[2:])
@@ -93,7 +93,7 @@ def apply_blur(data, coordinates, invert, no_noise):
             patch_mask[i, j, :, x1[i, j]: x2[i, j], y1[i, j]: y2[i, j]] = 1
     non_blured_data = data * (1 - patch_mask)
     patched_data = data * patch_mask
-    blurred_patch = torchvision.transforms.functional.gaussian_blur(patched_data, kernel_size=3, sigma=blur_sigma)
+    blurred_patch = torchvision.transforms.functional.gaussian_blur(patched_data, kernel_size=3)
     final_data = blurred_patch * patch_mask + non_blured_data
 
     return final_data
