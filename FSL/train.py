@@ -42,6 +42,25 @@ def train(
             inputs = inputs.to(device)
             targets = targets.to(device)
 
+            if apply_blur:
+                blurred_inputs_list = []
+                coordinates_list = []
+                for i in range(num_crops):
+                    blurred_inputs, coordinates = blur_input(
+                        inputs, patch_size, invert, no_noise
+                    )
+                    image_source = (
+                        T.tensor(list(range(coordinates.shape[1])))
+                        .unsqueeze(0)
+                        .unsqueeze(2)
+                        .repeat(coordinates.shape[0], 1, 1)
+                    )
+                    coordinates = T.cat([coordinates, image_source], dim=2)
+                    blurred_inputs_list.append(blurred_inputs)
+                    coordinates_list.append(coordinates)
+                augmented_inputs = T.cat(blurred_inputs_list, dim=1)
+                coordinates = T.cat(coordinates_list, dim=1)
+
             batch_size = inputs.shape[0]
             inputs = inputs.reshape(
                 batch_size * n_way, n_support + n_query, *inputs.shape[2:]
@@ -96,24 +115,7 @@ def train(
                     coordinates_list.append(coordinates)
                 augmented_inputs = T.cat(masked_inputs_list, dim=1)
                 coordinates = T.cat(coordinates_list, dim=1)
-            elif apply_blur:
-                blurred_inputs_list = []
-                coordinates_list = []
-                for i in range(num_crops):
-                    blurred_inputs, coordinates = blur_input(
-                        inputs, patch_size, invert, no_noise
-                    )
-                    image_source = (
-                        T.tensor(list(range(coordinates.shape[1])))
-                        .unsqueeze(0)
-                        .unsqueeze(2)
-                        .repeat(coordinates.shape[0], 1, 1)
-                    )
-                    coordinates = T.cat([coordinates, image_source], dim=2)
-                    blurred_inputs_list.append(blurred_inputs)
-                    coordinates_list.append(coordinates)
-                augmented_inputs = T.cat(blurred_inputs_list, dim=1)
-                coordinates = T.cat(coordinates_list, dim=1)
+
 
             rescaled_inputs = rescale_input(augmented_inputs, output_shape)
 
