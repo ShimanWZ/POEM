@@ -93,7 +93,7 @@ def apply_blur(data, coordinates, invert, no_noise):
             patch_mask[i, j, :, x1[i, j]: x2[i, j], y1[i, j]: y2[i, j]] = 1
     non_blured_data = data * (1 - patch_mask)
     patched_data = data * patch_mask
-    blurred_patch = gaussian_blur(patched_data, kernel_size=3, sigma=blur_sigma)
+    blurred_patch = torchvision.transforms.functional.gaussian_blur(patched_data, kernel_size=3, sigma=blur_sigma)
     final_data = blurred_patch * patch_mask + non_blured_data
 
     return final_data
