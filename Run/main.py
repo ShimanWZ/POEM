@@ -72,10 +72,10 @@ def parse_fsl_args():
     parser.add_argument(
         "--lr", type=float, default=0.001, help="Learning rate for learner"
     )
-    parser.add_argument("--num_epochs", type=int, default=10, help="Max epochs.")
-    parser.add_argument("--epoch_size", type=int, default=2000, help="Epoch size.")
+    parser.add_argument("--num_epochs", type=int, default=1, help="Max epochs.")
+    parser.add_argument("--epoch_size", type=int, default=1, help="Epoch size.")
     parser.add_argument(
-        "--test_episodes", type=int, default=2000, help="Number of evaluation episodes."
+        "--test_episodes", type=int, default=1, help="Number of evaluation episodes."
     )
 
     args = parser.parse_args()
