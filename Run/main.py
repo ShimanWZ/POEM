@@ -43,6 +43,7 @@ def parse_fsl_args():
     parser.add_argument(
         "--no_noise", action="store_true", help="Remove noise from masking."
     )
+
     parser.add_argument(
         "--use_coordinates",
         action="store_true",
