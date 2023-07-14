@@ -28,6 +28,7 @@ def train(
     no_noise,
     output_shape,
     use_coordinates,
+    test_type="",
 ):
     for epoch in range(max_epochs):
         for episode in range(epoch_size):
@@ -201,8 +202,8 @@ def train(
 
                     wandb.log(
                         {
-                            "Testing/Loss": outputs["loss"],
-                            "Testing/Accuracy": outputs["accuracy"],
+                            test_type+"Testing/Loss": outputs["loss"],
+                            test_type+"Testing/Accuracy": outputs["accuracy"],
                         }
                     )
 
