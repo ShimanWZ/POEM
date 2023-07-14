@@ -26,6 +26,7 @@ def mask_input(input, patch_size=-1, invert=False, no_noise=False):
         coordinates = generate_patch_coordinates(
             data_size=input.shape, patch_size=patch_size
         )
+
     masked_input = apply_mask(input, coordinates, invert, no_noise)
     coordinates = (
         torch.tensor(coordinates)

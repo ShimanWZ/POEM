@@ -31,7 +31,6 @@ def train(
 ):
     for epoch in range(max_epochs):
         for episode in range(epoch_size):
-
             if train == "train":
                 inputs, targets = next(dataloader)["train"]
             elif train == "test":
