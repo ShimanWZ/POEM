@@ -3,7 +3,7 @@ import torch as T
 import torchvision
 import wandb
 
-from FSL.utils import crop_input, mask_input, rescale_input, blur_input
+from FSL.utils import crop_input, mask_input, rescale_input
 from torchvision.utils import save_image
 import time
 
@@ -28,8 +28,6 @@ def train(
     no_noise,
     output_shape,
     use_coordinates,
-    test_type="",
-    apply_blur=False,
 ):
     for epoch in range(max_epochs):
         for episode in range(epoch_size):
@@ -41,25 +39,6 @@ def train(
 
             inputs = inputs.to(device)
             targets = targets.to(device)
-
-            if apply_blur:
-                blurred_inputs_list = []
-                coordinates_list = []
-                for i in range(num_crops):
-                    blurred_inputs, coordinates = blur_input(
-                        inputs, patch_size, invert, no_noise
-                    )
-                    image_source = (
-                        T.tensor(list(range(coordinates.shape[1])))
-                        .unsqueeze(0)
-                        .unsqueeze(2)
-                        .repeat(coordinates.shape[0], 1, 1)
-                    )
-                    coordinates = T.cat([coordinates, image_source], dim=2)
-                    blurred_inputs_list.append(blurred_inputs)
-                    coordinates_list.append(coordinates)
-                augmented_inputs = T.cat(blurred_inputs_list, dim=1)
-                coordinates = T.cat(coordinates_list, dim=1)
 
             batch_size = inputs.shape[0]
             inputs = inputs.reshape(
@@ -97,6 +76,7 @@ def train(
                     coordinates_list.append(coordinates)
                 augmented_inputs = T.cat(cropped_inputs_list, dim=1)
                 coordinates = T.cat(coordinates_list, dim=1)
+
             elif apply_masking:
                 masked_inputs_list = []
                 coordinates_list = []
@@ -115,7 +95,6 @@ def train(
                     coordinates_list.append(coordinates)
                 augmented_inputs = T.cat(masked_inputs_list, dim=1)
                 coordinates = T.cat(coordinates_list, dim=1)
-
 
             rescaled_inputs = rescale_input(augmented_inputs, output_shape)
 
@@ -223,8 +202,8 @@ def train(
 
                     wandb.log(
                         {
-                            test_type+"Testing/Loss": outputs["loss"],
-                            test_type+"Testing/Accuracy": outputs["accuracy"],
+                            "Testing/Loss": outputs["loss"],
+                            "Testing/Accuracy": outputs["accuracy"],
                         }
                     )
 
