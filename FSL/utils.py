@@ -34,6 +34,22 @@ def mask_input(input, patch_size=-1, invert=False, no_noise=False):
     )
     return masked_input, coordinates
 
+def blur_input(input, patch_size=-1, invert=False, no_noise=False):
+    if patch_size == -1:
+        coordinates = generate_random_coordinates(data_size=input.shape)
+    else:
+        coordinates = generate_patch_coordinates(
+            data_size=input.shape, patch_size=patch_size
+        )
+    print("input shape: ", input.shape)
+    blurred_input = apply_blur(input, coordinates, invert, no_noise)
+    coordinates = (
+        torch.tensor(coordinates)
+        .permute(2, 3, 0, 1)
+        .reshape(input.shape[0], input.shape[1], -1)
+    )
+    return blurred_input, coordinates
+
 def rescale_input(input, output_shape):
     rescaled_input = input.reshape(-1,*input.shape[2:])
     rescaled_input = torchvision.transforms.functional.resize(rescaled_input, size = (output_shape[-2], output_shape[-1]))
@@ -70,6 +86,18 @@ def apply_mask(data, coordinates, invert, no_noise):
         masked_data += mask * torch.rand_like(data)
     return masked_data
 
+def apply_blur(data, coordinates, invert, no_noise):
+    ((x1, y1), (x2, y2)) = coordinates
+    patch_mask = torch.zeros_like(data)
+    for i in range(data.shape[0]):
+        for j in range(data.shape[1]):
+            patch_mask[i, j, :, x1[i, j]: x2[i, j], y1[i, j]: y2[i, j]] = 1
+    non_blured_data = data * (1 - patch_mask)
+    patched_data = data * patch_mask
+    blurred_patch = torchvision.transforms.functional.gaussian_blur(patched_data, kernel_size=3)
+    final_data = blurred_patch * patch_mask + non_blured_data
+
+    return final_data
 
 def generate_patch_coordinates(data_size, patch_size):
     rng = np.random.default_rng()

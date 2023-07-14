@@ -134,9 +134,10 @@ if __name__ == "__main__":
         )
     else:
         raise ValueError(f"Dataset {config.dataset} not recognised.")
+    dataset.shape
 
     dataloader = iter(BatchMetaDataLoader(dataset, batch_size=1, num_workers=4))
-
+    dataloader.shape
     if config.learner == "POEM":
         learner = PartialObservationExpertsModelling(
             input_shape=config.output_shape,
