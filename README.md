@@ -32,29 +32,6 @@ python -m FSL.main --help
 ```
 Toy experiments use on the [torchmeta](https://github.com/tristandeleu/pytorch-meta) package, so the required MiniImageNet and Omniglot datasets can be downloaded automatically. However, torchmeta limits the torchvision version (to torchvision<0.11.0 and >=0.5.0, as in e.g. [this issue](https://github.com/tristandeleu/pytorch-meta/issues/161)). If you don't intend to run the toy experiments you can upgrade the the PyTorch/Torchvision packages from those specified in the environment file.
 
-### Minigrid Agent Environment Experiments
-<img src="resources/EnvironmentView.gif" width=300> <img src="resources/AgentView.gif" width=300>
-
-Example: Training POEM on the 11x11, 5 room [simple crossing environment](https://minigrid.farama.org/environments/minigrid/CrossingEnv/):
-```
-python -m RL.main --env MiniGrid-SimpleCrossingS11N5-v0 --trained_agent CrossingS11N5_A2C_fullgrid_navigation --exploratory_agent CrossingS11N5_A2C_fullgrid_navigation_state_bonus --learner POEM --use_location --use_direction --num_train_tasks=5000
-```
-Full configuration options can be listed with
-```
-python -m RL.main --help
-```
-A pretrained agent (to generate optimal trajectories) and an exploratory agent (to generate queries for training) are both available for the example above in the bundled `minigrid_rl_starter` package. For other environment variants these agents will need to be trained independently. Note that the bundled `gym-minigrid` package uses an environment wrapper to only allow navigation actions to simplify the action space for these agents.
-
-Once POEM has been trained to synthesise partial observations into unified environment representations, a decoder can be trained on these representations to generate environment reconstructions from the trajectories of agent-centric observations in new environments.
-
-Example: Training a decoder to generate environment reconstructions from a trained POEM model (using the wanbd run from the training above):
-```
-python -m RL.main_decoder --env MiniGrid-SimpleCrossingS11N5-v0 --agent CrossingS11N5_A2C_fullgrid_navigation --learner POEM --use_location --use_direction --log_frequency 10 --num_episodes=5000 --decode_grid --model_run_path <wandb-username>/<wandb-project>/<wandb-run-id>
-```
-<img src="resources/GroundTruthEnvs.jpg" width=350> <img src="resources/POEMReconstructedEnvs.jpg" width=350>
-
-Environments (left) and their reconstructions from agent observations using POEM (right).
-
 ### Meta-Dataset Benchmarking
 The full Meta-Dataset benchmarking reported in the paper was carried out using the [GATE (Generalisation After Transfer Evaluation)](https://github.com/BayesWatch/POEM-Bench) framework, to ensure strict evaluation procedures and using state-of-the-art backbones (as specified) for fair comparisons with baselines. Our benchmarking codebase is available in the repository [POEM-Bench](https://github.com/BayesWatch/POEM-Bench).
 
